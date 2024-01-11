@@ -1,27 +1,61 @@
 var buttons = document.getElementsByClassName("values");
+var dec = document.getElementById("dec");
+dec.disabled = false;
+
 for (var i = 0; i < buttons.length; i++) {
-  buttons[i].onclick=click;
+  buttons[i].onclick = click;
 }
+
 var operator = document.getElementsByClassName("operator");
 for (var i = 0; i < operator.length; i++) {
-  operator[i].onclick=click;
+  operator[i].onclick = clickOperator;
 }
-clear=document.getElementById("clear")
-clear.onclick= function(){
-  window.location.reload();
-}
-function click(){
+
+function click() {
   var value = this.value;
   var screen = document.getElementById("screen");
-    screen.innerText += value;
+  screen.innerText += value;
+  for (var i = 0; i < operator.length; i++) {
+    operator[i].disabled = false;
+  }
+  dec.disabled = false;
 }
-equal=document.getElementById("equal")
-equal.onclick=function(){
+
+function clickOperator() {
+  var value = this.value;
   var screen = document.getElementById("screen");
-  screen.innerText= eval(screen.innerText)
+  screen.innerText += value;
+  for (var i = 0; i < operator.length; i++) {
+    operator[i].disabled = true;
+  }
+  dec.disabled = false;
 }
-var del = document.getElementById("del");
-del.onclick = function () {
-  var display = document.getElementById("screen");
-  display.innerText = display.innerText.slice(0, -1);
+
+var clear = document.getElementById("clear");
+clear.onclick = function () {
+  window.location.reload();
 };
+
+var equal = document.getElementById("equal");
+equal.onclick = function () {
+  try {
+    var screen = document.getElementById("screen");
+    screen.innerText = eval(screen.innerText);
+    dec.disabled = false;
+  } catch {
+    screen.innerText = "Error";
+  }
+};
+
+var del = document.getElementById("del");
+del.addEventListener("click", () => {
+  var display = document.getElementById("screen");
+  if (display.innerText.charAt(display.innerText.length - 1) == ".") {
+    dec.disabled = false;
+  }
+  display.innerText = display.innerText.slice(0, -1);
+});
+
+dec.addEventListener("click", () => {
+  dec.disabled = true;
+});
